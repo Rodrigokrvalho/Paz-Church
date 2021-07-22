@@ -25,7 +25,7 @@ export default class Form extends React.Component {
         tel: ""
     }
 
-    fieldValidation = (values) => {
+    handleFieldValidation = (values) => {
         let validation = true
         Object.values(values).forEach(value => {
             if (value == "" && validation == true) {
@@ -46,20 +46,20 @@ export default class Form extends React.Component {
         });
     }
 
-    getCep = (event) => {
+    handleGetCep = (event) => {
         const cep = event.target.value.replace(/[^0-9]/, "").replace(/[^\d]+/g, '')
         if (cep.length == 8) {
             const url = `https://viacep.com.br/ws/${cep}/json/`
             fetch(url, { mode: 'cors' })
                 .then((res) => res.json())
                 .then((data) => {
-                    this.setAddress(data)
+                    this.handleSetAddress(data)
                     this.setState({ cep })
                 })
         } else { return false }
     }
 
-    setAddress = (data) => {
+    handleSetAddress = (data) => {
         const uf = data.uf
         const city = data.localidade
         const district = data.bairro
@@ -72,9 +72,9 @@ export default class Form extends React.Component {
         })
     }
 
-    send = async (event) => {
+    handleSend = async (event) => {
         event.preventDefault()
-        let valid = this.fieldValidation(this.state, event.target)
+        let valid = this.handleFieldValidation(this.state, event.target)
 
         valid ? (
             console.log(this.state)
@@ -100,7 +100,7 @@ export default class Form extends React.Component {
     render() {
         return (
             <div className={styles.form}>
-                <form onSubmit={this.send}>
+                <form onSubmit={this.handleSend}>
                     <section className={styles.section} id="personal">
                         <div className={styles.question}>
                             <label className={styles.description} htmlFor="fullName">Nome Completo</label>
@@ -192,7 +192,7 @@ export default class Form extends React.Component {
                             <input
                                 name="cep"
 
-                                onChange={this.getCep}
+                                onChange={this.handleGetCep}
                                 type="text"
                                 id="cep"
                                 maxLength={9} />
