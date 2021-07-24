@@ -1,4 +1,5 @@
 import '../styles/globals.css'
+import logo from '../../public/logotop.png'
 import Image from 'next/image'
 
 function MyApp({ Component, pageProps }) {
@@ -6,7 +7,7 @@ function MyApp({ Component, pageProps }) {
     <>
        <header>
         <div className="logo">
-          {/* <Image src="https://paz.church/barueri/wp-content/uploads/2019/11/logotop.png" alt="Paz Church | Barueri" width={200} height={50} /> */}
+          <Image src={logo} alt="Paz Church | Barueri" width={200} height={60} />
         </div>
       </header> 
       <Component {...pageProps} />

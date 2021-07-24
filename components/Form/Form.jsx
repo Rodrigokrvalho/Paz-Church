@@ -1,34 +1,33 @@
-// import Image from 'next/image'
 import React from 'react'
-import styles from '../../styles/Form.module.css'
-
+import styles from '../../src/styles/Form.module.css'
+import InputMask from "react-input-mask"
 
 export default class Form extends React.Component {
 
     state = {
-        fullName: "",
-        sex: "",
-        bornDate: "",
-        civil: "",
-        childs: "",
-        cep: "",
-        uf: "",
-        city: "",
-        district: "",
-        address: "",
-        addressNumber: "",
-        knowPaz: "",
-        participate: "",
-        group: "",
-        leader: "",
-        email: "",
-        tel: ""
+        fullName: '',
+        sex: '',
+        bornDate: '',
+        civil: '',
+        childs: '',
+        cep: '',
+        uf: '',
+        city: '',
+        district: '',
+        address: '',
+        addressNumber: '',
+        knowPaz: '',
+        participate: '',
+        group: '',
+        leader: '',
+        email: '',
+        tel: ''
     }
 
     handleFieldValidation = (values) => {
         let validation = true
         Object.values(values).forEach(value => {
-            if (value == "" && validation == true) {
+            if (value == '' && validation == true) {
                 validation = false
             }
         })
@@ -47,7 +46,9 @@ export default class Form extends React.Component {
     }
 
     handleGetCep = (event) => {
-        const cep = event.target.value.replace(/[^0-9]/, "").replace(/[^\d]+/g, '')
+        let cep = event.target.value.replace(/[^0-9]/, '').replace(/[^\d]+/g, '')
+        this.setState({ cep })
+
         if (cep.length == 8) {
             const url = `https://viacep.com.br/ws/${cep}/json/`
             fetch(url, { mode: 'cors' })
@@ -55,6 +56,7 @@ export default class Form extends React.Component {
                 .then((data) => {
                     this.handleSetAddress(data)
                     this.setState({ cep })
+                    console.log(cep)
                 })
         } else { return false }
     }
@@ -93,8 +95,6 @@ export default class Form extends React.Component {
             //     console.log(err)
             // }
         ) : alert('Por favor, preencha todos os campos para prosseguir')
-
-
     }
 
     render() {
@@ -138,7 +138,10 @@ export default class Form extends React.Component {
                         <div className={styles.question}>
                             <label className={styles.description} htmlFor="bornDate">Data de Nascimento</label>
                             <input
-                                onChange={this.handleInputChange}
+                                onChange={(event) => {
+                                    this.handleInputChange(event)
+                                    this.maskDate(event.target.value)
+                                }}
                                 value={this.state.bornDate}
                                 type="date"
                                 name="bornDate"
@@ -189,13 +192,12 @@ export default class Form extends React.Component {
 
                         <div className={styles.question}>
                             <label className={styles.description} htmlFor="cep">Cep</label>
-                            <input
+                            <InputMask
                                 name="cep"
-
-                                onChange={this.handleGetCep}
+                                mask="99999-999"
+                                onChange={ this.handleGetCep }
                                 type="text"
-                                id="cep"
-                                maxLength={9} />
+                                id="cep" />
                         </div>
 
                         <div className={styles.question}>

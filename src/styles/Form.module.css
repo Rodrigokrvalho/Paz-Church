@@ -38,12 +38,12 @@
 
     color: var(--dark-grey);
     background: transparent;
-    border-bottom: solid 2px var(--background-blue);
+    border-bottom: solid 1px #CCC;
     border-radius: 2px;
 }
 
 .section .question input:focus {
-    border-bottom: solid 3px blue;
+    border-bottom: solid 1px blue;
 }
 
 .section .question .date::-webkit-calendar-picker-indicator {
