@@ -70,6 +70,10 @@
     width: 100%;
 }
 
+.section .horizontal .question {
+    width: 50%;
+}
+
 .section .question .description, .section .radioButtons .description {
     color: rgb(0, 0, 160);
     font-size: 1.05rem;

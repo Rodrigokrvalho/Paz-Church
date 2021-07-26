@@ -1,7 +1,7 @@
 import Head from 'next/head'
-import Link from 'next/link'
 import styles from '../styles/Home.module.css'
 import Form from '../../components/Form/Form'
+
 
 export default function Home() {
 
@@ -14,12 +14,7 @@ export default function Home() {
         <title>Paz Church - Barueri</title>
         <meta name='viewport' content='width=device-width, initial-scale=1' />
       </Head>
-      <main>
-        <h1>Home</h1>
-        <Link href="/cadastro">
-          <a>Cadastre-se</a>
-        </Link>
-      </main>
+      <Form />
 
     </div>
   )
