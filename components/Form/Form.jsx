@@ -1,6 +1,5 @@
 import React from 'react'
 import styles from '../../src/styles/Form.module.css'
-import InputMask from "react-input-mask"
 
 export default class Form extends React.Component {
 
@@ -27,12 +26,12 @@ export default class Form extends React.Component {
 
     handleFieldValidation = (values) => {
         let validation = true
+
         Object.values(values).forEach(value => {
             if (value == '' && validation == true) {
                 validation = false
             }
         })
-
         return validation
     }
 
@@ -40,15 +39,27 @@ export default class Form extends React.Component {
         const target = event.target;
         const value = target.value;
         const name = target.name;
-        console.log(name, value)
         this.setState({
             [name]: value
         });
     }
 
+    handleGetPhone = (event) => {
+        const noMaskTel = event.target.value
+        let tel = this.maskPhone(noMaskTel)
+        this.setState({ tel })
+    }
+
+    maskPhone = value => {
+        return value
+            .replace(/\D/g, "")
+            .replace(/(\d{2})(\d)/, "($1) $2")
+            .replace(/(\d{5})(\d{4})(\d)/, "$1 $2");
+    }
+
+
     handleGetCep = (event) => {
         let cep = event.target.value.replace(/[^0-9]/, '').replace(/[^\d]+/g, '')
-        this.setState({ cep })
 
         if (cep.length == 8) {
             const url = `https://viacep.com.br/ws/${cep}/json/`
@@ -56,10 +67,15 @@ export default class Form extends React.Component {
                 .then((res) => res.json())
                 .then((data) => {
                     this.handleSetAddress(data)
-                    this.setState({ cep })
-                    console.log(cep)
                 })
-        } else { return false }
+        }
+
+        cep = this.maskCep(cep)
+        this.setState({ cep })  
+}
+
+    maskCep = (value) => {
+        return value.replace(/^(\d{5})(\d{3})+?$/, "$1-$2")
     }
 
     handleSetAddress = (data) => {
@@ -75,9 +91,41 @@ export default class Form extends React.Component {
         })
     }
 
+    handleGetDate = (event) => {
+        let bornDate = event.target.value
+        bornDate = this.maskDate(bornDate)
+        this.setState ({ bornDate })
+
+    }
+
+    handleDateValidation = (v) => {
+        let dateArray = v.split('/')
+        if (dateArray[1] <= 12 && dateArray[2] < 2020) {
+            let date = new Date(dateArray[2], dateArray[1] - 1, dateArray[0])
+            return date == "Invalid Date" ? false : true
+        }
+        else return false
+    }
+
+    maskDate = value => {
+        return value
+            .replace(/\D/g, "")
+            .replace(/(\d{2})(\d)/, "$1/$2")
+            .replace(/(\d{2})(\d)/, "$1/$2")
+            .replace(/(\d{4})(\d)/, "$1");
+    }
+
     handleSend = async (event) => {
         event.preventDefault()
-        let valid = this.handleFieldValidation(this.state, event.target)
+        let valid = true
+        
+        if ( this.handleDateValidation(this.state.bornDate) == false ) {
+            valid = false
+            alert('Data de nascimento invalida')
+        } else if (this.handleFieldValidation(this.state, event.target) == false) {
+            valid = false
+            alert('Por favor, preencha todos os campos para prosseguir')
+        }
 
         valid ? (
             console.log(this.state)
@@ -95,7 +143,7 @@ export default class Form extends React.Component {
             // } catch (err) {
             //     console.log(err)
             // }
-        ) : alert('Por favor, preencha todos os campos para prosseguir')
+        ) : ''
     }
 
     render() {
@@ -118,7 +166,7 @@ export default class Form extends React.Component {
                             <select
                                 onChange={this.handleInputChange}
                                 name="sex"
-                                id="sexMale"
+                                id="sex"
                                 value={this.state.sex}>
                                 <option value=""></option>
                                 <option value="Male">Masculino</option>
@@ -129,9 +177,9 @@ export default class Form extends React.Component {
                         <div className={styles.question}>
                             <label className={styles.description} htmlFor="bornDate">Data de Nascimento</label>
                             <input
-                                onChange={this.handleInputChange}
+                                onChange={this.handleGetDate}
                                 value={this.state.bornDate}
-                                type="date"
+                                type="text"
                                 name="bornDate"
                                 id="bornDate"
                                 className={styles.date} />
@@ -159,7 +207,7 @@ export default class Form extends React.Component {
                                 onChange={this.handleInputChange}
                                 name="childs"
                                 id="childYes"
-                                value="childYes" >
+                                value={this.state.childs} >
                                 <option value=""></option>
                                 <option value="childNo">Não</option>
                                 <option value="child1">1</option>
@@ -179,10 +227,9 @@ export default class Form extends React.Component {
 
                         <div className={styles.question}>
                             <label className={styles.description} htmlFor="cep">Cep</label>
-                            <InputMask
+                            <input
                                 name="cep"
-                                mask="99999-999"
-                                maskChar=" "
+                                value={this.state.cep}
                                 onChange={this.handleGetCep}
                                 type="text"
                                 id="cep" />
@@ -288,57 +335,55 @@ export default class Form extends React.Component {
                                 name="group"
                                 id="group"
                                 value={this.state.group} >
-                                    <option value=""></option>
-                                    <option value="yes">Sim</option>
-                                    <option value="no">Não</option>
+                                <option value=""></option>
+                                <option value="yes">Sim</option>
+                                <option value="no">Não</option>
                             </select>
 
                         </div>
 
-                    <div className={styles.question}>
-                        <label className={styles.description} htmlFor="leader">Quem é o lider?</label>
-                        <input
-                            onChange={this.handleInputChange}
-                            value={this.state.leader}
-                            type="text"
-                            name="leader"
-                            id="leader" />
-                    </div>
+                        <div className={styles.question}>
+                            <label className={styles.description} htmlFor="leader">Quem é o lider?</label>
+                            <input
+                                onChange={this.handleInputChange}
+                                value={this.state.leader}
+                                type="text"
+                                name="leader"
+                                id="leader" />
+                        </div>
 
-                    <div className={styles.buttons}>
-                        <a href="#enterAddress">Anterior</a>
-                        <a href="#contact">Proximo</a>
-                    </div>
+                        <div className={styles.buttons}>
+                            <a href="#enterAddress">Anterior</a>
+                            <a href="#contact">Proximo</a>
+                        </div>
                     </section>
 
-                <section className={styles.section} id="contact">
-                    <div className={styles.question}>
-                        <label className={styles.description} htmlFor="email">Email</label>
-                        <input
-                            onChange={this.handleInputChange}
-                            value={this.state.email}
-                            type="email"
-                            name="email"
-                            id="email" />
-                    </div>
+                    <section className={styles.section} id="contact">
+                        <div className={styles.question}>
+                            <label className={styles.description} htmlFor="email">Email</label>
+                            <input
+                                onChange={this.handleInputChange}
+                                value={this.state.email}
+                                type="email"
+                                name="email"
+                                id="email" />
+                        </div>
 
-                    <div className={styles.question}>
-                        <label className={styles.description} htmlFor="whats">Whatsapp</label>
-                        <InputMask
-                            onChange={this.handleInputChange}
-                            value={this.state.tel}
-                            mask="(99) 99999 9999"
-                            maskChar=" "
-                            type="tel"
-                            name="tel"
-                            id="tel" />
-                    </div>
+                        <div className={styles.question}>
+                            <label className={styles.description} htmlFor="whats">Whatsapp</label>
+                            <input
+                                onChange={this.handleGetPhone}
+                                value={this.state.tel}
+                                type="text"
+                                name="tel"
+                                id="tel" />
+                        </div>
 
-                    <div className={styles.buttons}>
-                        <a href="#knowUs">Anterior</a>
-                        <button type="submit">Finalizar</button>
-                    </div>
-                </section>
+                        <div className={styles.buttons}>
+                            <a href="#knowUs">Anterior</a>
+                            <button type="submit">Finalizar</button>
+                        </div>
+                    </section>
                 </form>
             </div >
         )
