@@ -131,25 +131,21 @@ export default class Form extends React.Component {
 
         } else if (valid) {
             this.setState({ success: valid })
+            try {
+                const response = await fetch('/api/send-mail', {
+                    method: 'POST',
+                    headers: {
+                        Accept: 'application/json',
+                        'Content-type': 'application/json',
+                    },
+                    body: JSON.stringify(this.state)
+                })
+
+            } catch (err) {
+                console.log(err)
+            }
         }
 
-        valid ? (
-            console.log(this.state)
-            // try {
-            //     const response = await fetch('---LOCAL---', {
-            //         method: 'POST',
-            //         headers: {
-            //             Accept: 'application/json',
-            //             'Content-type': 'application/json',
-            //         },
-            //         body: JSON.stringify(this.state)
-            //     })
-            //     const j = await response.json()
-
-            // } catch (err) {
-            //     console.log(err)
-            // }
-        ) : ''
     }
 
     render() {
