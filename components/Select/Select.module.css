@@ -1,0 +1,25 @@
+.question {
+    display: flex;
+    flex-direction: column;
+    margin: 1.5% 0;
+    padding: 3px 10px;
+    width: 100%;
+}
+
+.question select {
+    border: none;
+    font-size: 1.2rem;
+    font-family: inherit;
+    padding: 5px 2%;
+    cursor: pointer;
+    
+    color: var(--dark-grey);
+    background: transparent;
+    border-bottom: solid 1px #CCC;
+    border-radius: 2px;
+}
+
+.question .description {
+    color: rgb(0, 0, 160);
+    font-size: 1.05rem;
+}

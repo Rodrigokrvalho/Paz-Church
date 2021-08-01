@@ -1,5 +1,8 @@
 import React from 'react'
 import styles from '../../src/styles/Form.module.css'
+import { Select } from '../Select'
+import { DateInput } from '../DateInput'
+import { TextInput } from '../TextInput'
 import Thanks from '../Thanks/Thanks'
 
 export default class Form extends React.Component {
@@ -23,7 +26,11 @@ export default class Form extends React.Component {
         leader: ' ',
         email: '',
         tel: '',
-        success: 'wait'
+        success: 'wait',
+        personal: styles.section,
+        enterAddress: styles.section,
+        knowUs: styles.section,
+        contact: styles.section,
     }
 
     handleFieldValidation = (values) => {
@@ -44,6 +51,10 @@ export default class Form extends React.Component {
         this.setState({
             [name]: value
         });
+    }
+
+    handleSetState = (state) => {
+        this.setState(state)
     }
 
     handleGetPhone = (event) => {
@@ -100,15 +111,6 @@ export default class Form extends React.Component {
 
     }
 
-    handleDateValidation = (v) => {
-        let dateArray = v.split('/')
-        if (dateArray[1] <= 12 && dateArray[2] < 2020) {
-            let date = new Date(dateArray[2], dateArray[1] - 1, dateArray[0])
-            return date == "Invalid Date" ? false : true
-        }
-        else return false
-    }
-
     maskDate = value => {
         return value
             .replace(/\D/g, "")
@@ -154,73 +156,60 @@ export default class Form extends React.Component {
                 {this.state.success == 'wait' &&
                     <div className={styles.form}>
                         <form onSubmit={this.handleSend}>
-                            <section className={styles.section} id="personal">
-                                <div className={styles.question}>
-                                    <label className={styles.description} htmlFor="fullName">Nome Completo</label>
-                                    <input
-                                        onChange={this.handleInputChange}
-                                        value={this.state.fullName}
-                                        type="text"
-                                        name="fullName"
-                                        id="fullName" />
-                                </div>
+                            <section className={this.state.personal} id="personal">
+                                <TextInput
+                                    onChange={this.handleInputChange}
+                                    value={this.state.fullName}
+                                    name="fullName"
+                                    label="Nome Completo" />
 
-                                <div className={styles.question}>
-                                    <p className={styles.description}>Sexo</p>
-                                    <select
-                                        onChange={this.handleInputChange}
-                                        name="sex"
-                                        id="sex"
-                                        value={this.state.sex}>
-                                        <option value=""></option>
-                                        <option value="Male">Masculino</option>
-                                        <option value="Female">Feminino</option>
-                                    </select>
-                                </div>
+                                <Select
+                                    name="sex"
+                                    label="Sexo"
+                                    onChange={this.handleInputChange}
+                                    value={this.state.sex}
+                                    options={[
+                                        { value: "", label: "" },
+                                        { value: "Male", label: "Masculino" },
+                                        { value: "Female", label: "Feminino" }]} />
 
-                                <div className={styles.question}>
-                                    <label className={styles.description} htmlFor="bornDate">Data de Nascimento</label>
-                                    <input
-                                        onChange={this.handleGetDate}
-                                        value={this.state.bornDate}
-                                        type="text"
-                                        name="bornDate"
-                                        id="bornDate"
-                                        className={styles.date} />
-                                </div>
+                                <DateInput
+                                    onChange={this.handleGetDate}
+                                    value={this.state.bornDate}
+                                    name="bornDate"
+                                    label="Data de Nascimento" />
 
-                                <div className={styles.question}>
-                                    <label className={styles.description} htmlFor="civil">Estado Civil</label>
-                                    <select
-                                        onChange={this.handleInputChange}
-                                        value={this.state.civil}
-                                        name="civil"
-                                        id="civil" >
-                                        <option value=""></option>
-                                        <option value="single">Solteiro(a)</option>
-                                        <option value="married">Casado(a)</option>
-                                        <option value="stableUnion">União Estavel</option>
-                                        <option value="livingTogether">Morando Juntos</option>
-                                        <option value="widower">Viuvo(a)</option>
-                                    </select>
-                                </div>
+                                <Select
+                                    onChange={this.handleInputChange}
+                                    label="Estado Civil"
+                                    value={this.state.civil}
+                                    name="civil"
+                                    id="civil"
+                                    options={[
+                                        { value: "", label: "" },
+                                        { value: "single", label: "Solteiro(a)" },
+                                        { value: "married", label: "Casado(a)" },
+                                        { value: "stableUnion", label: "União Estavel" },
+                                        { value: "livingTogether", label: "Morando Juntos" },
+                                        { value: "widower", label: "Viuvo(a)" }
 
-                                <div className={styles.question}>
-                                    <p className={styles.description}>Possui Filhos menores de idade?</p>
-                                    <select
-                                        onChange={this.handleInputChange}
-                                        name="childs"
-                                        id="childYes"
-                                        value={this.state.childs} >
-                                        <option value=""></option>
-                                        <option value="childNo">Não</option>
-                                        <option value="child1">1</option>
-                                        <option value="child2">2</option>
-                                        <option value="child3">3</option>
-                                        <option value="child4">4</option>
-                                        <option value="child5More">5 ou mais</option>
-                                    </select>
-                                </div>
+                                    ]} />
+
+                                <Select
+                                    onChange={this.handleInputChange}
+                                    label="Possui filhos menores de idade?"
+                                    name="childs"
+                                    id="childYes"
+                                    value={this.state.childs}
+                                    options={[
+                                        { value: "", label: "" },
+                                        { value: "childNo", label: "Não" },
+                                        { value: "child1", label: "1" },
+                                        { value: "child2", label: "2" },
+                                        { value: "child3", label: "3" },
+                                        { value: "child4", label: "4" },
+                                        { value: "child5More", label: "5 ou mais" }
+                                    ]} />
 
                                 <div className={styles.buttons}>
                                     <a href="#enterAddress">Proximo</a>
@@ -228,68 +217,58 @@ export default class Form extends React.Component {
                             </section>
 
                             <section className={styles.section} id="enterAddress">
+                                <TextInput
+                                    onChange={this.handleGetCep}
+                                    label="Cep"
+                                    value={this.state.cep}
+                                    name="cep"
+                                    type="text"
+                                    id="cep" />
 
-                                <div className={styles.question}>
-                                    <label className={styles.description} htmlFor="cep">Cep</label>
-                                    <input
-                                        name="cep"
-                                        value={this.state.cep}
-                                        onChange={this.handleGetCep}
-                                        type="text"
-                                        id="cep" />
-                                </div>
+                                <TextInput
+                                    onChange={this.handleInputChange}
+                                    label="Endereço"
+                                    value={this.state.address}
+                                    name="address"
+                                    type="text"
+                                    id="address" />
 
-                                <div className={styles.question}>
-                                    <label className={styles.description} htmlFor="address">Endereço</label>
-                                    <input
-                                        onChange={this.handleInputChange}
-                                        value={this.state.address}
-                                        name="address"
-                                        type="text"
-                                        id="address" />
-                                </div>
 
                                 <div className={styles.horizontal}>
-                                    <div className={styles.question}>
-                                        <label className={styles.description} htmlFor="addressNumber">Numero</label>
-                                        <input
-                                            onChange={this.handleInputChange}
-                                            value={this.state.addressNumber}
-                                            name="addressNumber"
-                                            type="number"
-                                            id="addressNumber" />
-                                    </div>
-                                    <div className={styles.question}>
-                                        <label className={styles.description} htmlFor="addressComp">Complemento</label>
-                                        <input
-                                            onChange={this.handleInputChange}
-                                            value={this.state.addressComp}
-                                            name="addressComp"
-                                            type="text"
-                                            id="addressComp" />
-                                    </div>
-                                </div>
 
-
-                                <div className={styles.question}>
-                                    <label className={styles.description} htmlFor="district">Bairro</label>
-                                    <input
+                                    <TextInput
                                         onChange={this.handleInputChange}
-                                        value={this.state.district}
-                                        name="district"
+                                        label="Número"
+                                        value={this.state.addressNumber}
+                                        name="addressNumber"
+                                        type="number"
+                                        id="addressNumber" />
+
+                                    <TextInput
+                                        onChange={this.handleInputChange}
+                                        label="Complemento"
+                                        value={this.state.addressComp}
+                                        name="addressComp"
                                         type="text"
-                                        id="district" />
+                                        id="addressComp" />
+
                                 </div>
 
-                                <div className={styles.question}>
-                                    <label className={styles.description} htmlFor="city">Cidade</label>
-                                    <input
-                                        onChange={this.handleInputChange}
-                                        value={this.state.city}
-                                        name="city"
-                                        type="text"
-                                        id="city" />
-                                </div>
+                                <TextInput
+                                    onChange={this.handleInputChange}
+                                    label="Bairro"
+                                    value={this.state.district}
+                                    name="district"
+                                    type="text"
+                                    id="district" />
+
+                                <TextInput
+                                    onChange={this.handleInputChange}
+                                    label="Cidade"
+                                    value={this.state.city}
+                                    name="city"
+                                    type="text"
+                                    id="city" />
 
                                 <div className={styles.buttons}>
                                     <a href="#personal">Anterior</a>
@@ -299,62 +278,58 @@ export default class Form extends React.Component {
                             </section>
 
                             <section className={styles.section} id="knowUs">
-                                <div className={styles.question}>
-                                    <label className={styles.description} htmlFor="knowPaz">Como você conheceu a Paz Church?</label>
-                                    <select
+
+                                <Select
+                                    onChange={this.handleInputChange}
+                                    label="Como você conheceu a Paz Church?"
+                                    value={this.state.knowPaz}
+                                    type="text"
+                                    name="knowPaz"
+                                    id="knowPaz"
+                                    options={[
+                                        { value: "", label: "" },
+                                        { value: "indication", label: "Indicação de um amigo" },
+                                        { value: "youtube", label: "Youtube" },
+                                        { value: "passBy", label: "Passei na frente" },
+                                        { value: "others", label: "Outros" }
+                                    ]} />
+
+                                <Select
+                                    onChange={this.handleInputChange}
+                                    label="Já participou de algum culto nosso?"
+                                    name="participate"
+                                    id="pYes1"
+                                    value={this.state.participate}
+                                    options={[
+                                        { value: "", label: "" },
+                                        { value: "yesOne", label: "Sim, uma vez" },
+                                        { value: "yesSome", label: "Sim, algumas vezes" },
+                                        { value: "no", label: "Não, será a primeira vez" }
+                                    ]}
+                                />
+
+                                <Select
+                                    onChange={this.handleInputChange}
+                                    label="Participa de um Life Group?"
+                                    name="group"
+                                    id="group"
+                                    value={this.state.group}
+                                    options={[
+                                        { value: "", label: "" },
+                                        { value: "yes", label: "Sim" },
+                                        { value: "no", label: "Não" }
+                                    ]}
+                                />
+
+                                {this.state.group != "no" &&
+                                    <TextInput
                                         onChange={this.handleInputChange}
-                                        value={this.state.knowPaz}
-                                        type="text"
-                                        name="knowPaz"
-                                        id="knowPaz" >
-                                        <option value=""></option>
-                                        <option value="indication">Indicação de um amigo</option>
-                                        <option value="youtube">Youtube</option>
-                                        <option value="passBy">Passei na frente</option>
-                                        <option value="others">Outros</option>
-                                    </select>
-                                </div>
-
-                                <div className={styles.question}>
-                                    <p className={styles.description}>Já participou de algum culto nosso?</p>
-
-                                    <select
-                                        onChange={this.handleInputChange}
-                                        name="participate"
-                                        id="pYes1"
-                                        value={this.state.participate} >
-                                        <option value=""></option>
-                                        <option value="yesOne">Sim, uma vez</option>
-                                        <option value="yesSome">Sim, algumas vezes</option>
-                                        <option value="no">Não, será a primeira vez</option>
-                                    </select>
-
-                                </div>
-
-                                <div className={styles.question}>
-                                    <p className={styles.description}>Participa de um Life Group?</p>
-
-                                    <select
-                                        onChange={this.handleInputChange}
-                                        name="group"
-                                        id="group"
-                                        value={this.state.group} >
-                                        <option value=""></option>
-                                        <option value="yes">Sim</option>
-                                        <option value="no">Não</option>
-                                    </select>
-
-                                </div>
-
-                                <div className={styles.question}>
-                                    <label className={styles.description} htmlFor="leader">Quem é o lider?</label>
-                                    <input
-                                        onChange={this.handleInputChange}
+                                        label="Quem é o líder?"
                                         value={this.state.leader}
                                         type="text"
                                         name="leader"
                                         id="leader" />
-                                </div>
+                                }
 
                                 <div className={styles.buttons}>
                                     <a href="#enterAddress">Anterior</a>
@@ -363,25 +338,22 @@ export default class Form extends React.Component {
                             </section>
 
                             <section className={styles.section} id="contact">
-                                <div className={styles.question}>
-                                    <label className={styles.description} htmlFor="email">Email</label>
-                                    <input
+
+                                    <TextInput
                                         onChange={this.handleInputChange}
+                                        label="E-mail"
                                         value={this.state.email}
                                         type="email"
                                         name="email"
                                         id="email" />
-                                </div>
 
-                                <div className={styles.question}>
-                                    <label className={styles.description} htmlFor="whats">Whatsapp</label>
-                                    <input
+                                    <TextInput
                                         onChange={this.handleGetPhone}
+                                        label="Whatsapp"
                                         value={this.state.tel}
                                         type="text"
                                         name="tel"
                                         id="tel" />
-                                </div>
 
                                 <div className={styles.buttons}>
                                     <a href="#knowUs">Anterior</a>
@@ -391,7 +363,8 @@ export default class Form extends React.Component {
                         </form>
                     </div >
                 }
-                {this.state.success == true &&
+                {
+                    this.state.success == true &&
                     <section>
                         <Thanks />
                     </section>
