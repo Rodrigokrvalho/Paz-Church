@@ -15,39 +15,13 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    width: 60vw;
+    width: 70vw;
     height: 100vh;
     padding-top: 5vh;
+    animation: upToDown 0.5s;
+    animation-direction: alternate;
 }
 
-.section .question {
-    display: flex;
-    flex-direction: column;
-    margin: 1.5% 0;
-    padding: 3px 10px;
-    width: 100%;
-}
-
-.section .question input:focus {
-    border-bottom: solid 1px blue;
-}
-
-.section .question .date {
-    font-family: inherit;
-}
-
-.section .question input::-webkit-calendar-picker-indicator {
-    width: 0%;
-    height: 0%;
-    position: absolute;
-    top: 0;
-    left: 0;
-    color: transparent;
-    background: 0 0;
-    margin: 0;
-    opacity: 0;
-    padding: 0;
-}
 
 .section .horizontal {
     display: grid;
@@ -59,10 +33,6 @@
     width: 50%;
 }
 
-.section .radioButtons .description {
-    color: rgb(0, 0, 160);
-    font-size: 1.05rem;
-}
 
 .section .buttons {
     display: flex;
@@ -92,8 +62,24 @@
     font-weight: 400;
 }
 
+@media (max-width: 1025px) {
+    .section {
+        width: 80vw
+    }
+}
+
 @media (max-width: 800px) {
     .section {
         width: 90vw
+    }
+}
+
+@keyframes upToDown {
+    0% {
+    transform: translateY(15vh);
+    }
+    100% {
+    transform: translateY(0vh)
+
     }
 }

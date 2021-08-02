@@ -26,11 +26,12 @@ export default class Form extends React.Component {
         leader: ' ',
         email: '',
         tel: '',
-        success: 'wait',
+
         personal: styles.section,
-        enterAddress: styles.section,
-        knowUs: styles.section,
-        contact: styles.section,
+        enterAddress: styles.invisible,
+        knowUs: styles.invisible,
+        contact: styles.invisible,
+        success: styles.invisible,
     }
 
     handleFieldValidation = (values) => {
@@ -119,6 +120,20 @@ export default class Form extends React.Component {
             .replace(/(\d{4})(\d)/, "$1");
     }
 
+    handleSectionVisibility = (sectionInvisible, sectionVisible) => {
+        this.setState({ [sectionInvisible]: styles.invisible })
+        this.setState({ [sectionVisible]: styles.section })
+    }
+
+    handleDateValidation = (v) => {
+        let dateArray = v.split('/')
+        if (dateArray[1] <= 12 && dateArray[2] < 2020) {
+            let date = new Date(dateArray[2], dateArray[1] - 1, dateArray[0])
+            return date == "Invalid Date" ? false : true
+        }
+        else return false
+    }
+
     handleSend = async (event) => {
         event.preventDefault()
         let valid = true
@@ -132,20 +147,20 @@ export default class Form extends React.Component {
             alert('Por favor, preencha todos os campos para prosseguir')
 
         } else if (valid) {
-            this.setState({ success: valid })
-            try {
-                const response = await fetch('/api/send-mail', {
-                    method: 'POST',
-                    headers: {
-                        Accept: 'application/json',
-                        'Content-type': 'application/json',
-                    },
-                    body: JSON.stringify(this.state)
-                })
+            this.handleSectionVisibility("contact", "success")
+            // try {
+            //     const response = await fetch('/api/send-mail', {
+            //         method: 'POST',
+            //         headers: {
+            //             Accept: 'application/json',
+            //             'Content-type': 'application/json',
+            //         },
+            //         body: JSON.stringify(this.state)
+            //     })
 
-            } catch (err) {
-                console.log(err)
-            }
+            // } catch (err) {
+            //     console.log(err)
+            // }
         }
 
     }
@@ -153,222 +168,222 @@ export default class Form extends React.Component {
     render() {
         return (
             <>
-                {this.state.success == 'wait' &&
-                    <div className={styles.form}>
-                        <form onSubmit={this.handleSend}>
-                            <section className={this.state.personal} id="personal">
-                                <TextInput
-                                    onChange={this.handleInputChange}
-                                    value={this.state.fullName}
-                                    name="fullName"
-                                    label="Nome Completo" />
+                <div className={styles.form}>
+                    <form onSubmit={this.handleSend}>
+                        <section className={this.state.personal} id="personal">
+                            <TextInput
+                                onChange={this.handleInputChange}
+                                value={this.state.fullName}
+                                name="fullName"
+                                label="Nome Completo" />
 
-                                <Select
-                                    name="sex"
-                                    label="Sexo"
-                                    onChange={this.handleInputChange}
-                                    value={this.state.sex}
-                                    options={[
-                                        { value: "", label: "" },
-                                        { value: "Male", label: "Masculino" },
-                                        { value: "Female", label: "Feminino" }]} />
+                            <Select
+                                name="sex"
+                                label="Sexo"
+                                onChange={this.handleInputChange}
+                                value={this.state.sex}
+                                options={[
+                                    { value: "", label: "" },
+                                    { value: "Male", label: "Masculino" },
+                                    { value: "Female", label: "Feminino" }]} />
 
-                                <DateInput
-                                    onChange={this.handleGetDate}
-                                    value={this.state.bornDate}
-                                    name="bornDate"
-                                    label="Data de Nascimento" />
+                            <DateInput
+                                onChange={this.handleGetDate}
+                                value={this.state.bornDate}
+                                name="bornDate"
+                                label="Data de Nascimento" />
 
-                                <Select
-                                    onChange={this.handleInputChange}
-                                    label="Estado Civil"
-                                    value={this.state.civil}
-                                    name="civil"
-                                    id="civil"
-                                    options={[
-                                        { value: "", label: "" },
-                                        { value: "single", label: "Solteiro(a)" },
-                                        { value: "married", label: "Casado(a)" },
-                                        { value: "stableUnion", label: "União Estavel" },
-                                        { value: "livingTogether", label: "Morando Juntos" },
-                                        { value: "widower", label: "Viuvo(a)" }
+                            <Select
+                                onChange={this.handleInputChange}
+                                label="Estado Civil"
+                                value={this.state.civil}
+                                name="civil"
+                                id="civil"
+                                options={[
+                                    { value: "", label: "" },
+                                    { value: "single", label: "Solteiro(a)" },
+                                    { value: "married", label: "Casado(a)" },
+                                    { value: "stableUnion", label: "União Estavel" },
+                                    { value: "livingTogether", label: "Morando Juntos" },
+                                    { value: "widower", label: "Viuvo(a)" }
 
-                                    ]} />
+                                ]} />
 
-                                <Select
-                                    onChange={this.handleInputChange}
-                                    label="Possui filhos menores de idade?"
-                                    name="childs"
-                                    id="childYes"
-                                    value={this.state.childs}
-                                    options={[
-                                        { value: "", label: "" },
-                                        { value: "childNo", label: "Não" },
-                                        { value: "child1", label: "1" },
-                                        { value: "child2", label: "2" },
-                                        { value: "child3", label: "3" },
-                                        { value: "child4", label: "4" },
-                                        { value: "child5More", label: "5 ou mais" }
-                                    ]} />
+                            <Select
+                                onChange={this.handleInputChange}
+                                label="Possui filhos menores de idade?"
+                                name="childs"
+                                id="childYes"
+                                value={this.state.childs}
+                                options={[
+                                    { value: "", label: "" },
+                                    { value: "childNo", label: "Não" },
+                                    { value: "child1", label: "1" },
+                                    { value: "child2", label: "2" },
+                                    { value: "child3", label: "3" },
+                                    { value: "child4", label: "4" },
+                                    { value: "child5More", label: "5 ou mais" }
+                                ]} />
 
-                                <div className={styles.buttons}>
-                                    <a href="#enterAddress">Proximo</a>
-                                </div>
-                            </section>
-
-                            <section className={styles.section} id="enterAddress">
-                                <TextInput
-                                    onChange={this.handleGetCep}
-                                    label="Cep"
-                                    value={this.state.cep}
-                                    name="cep"
-                                    type="text"
-                                    id="cep" />
-
-                                <TextInput
-                                    onChange={this.handleInputChange}
-                                    label="Endereço"
-                                    value={this.state.address}
-                                    name="address"
-                                    type="text"
-                                    id="address" />
-
-
-                                <div className={styles.horizontal}>
-
-                                    <TextInput
-                                        onChange={this.handleInputChange}
-                                        label="Número"
-                                        value={this.state.addressNumber}
-                                        name="addressNumber"
-                                        type="number"
-                                        id="addressNumber" />
-
-                                    <TextInput
-                                        onChange={this.handleInputChange}
-                                        label="Complemento"
-                                        value={this.state.addressComp}
-                                        name="addressComp"
-                                        type="text"
-                                        id="addressComp" />
-
-                                </div>
-
-                                <TextInput
-                                    onChange={this.handleInputChange}
-                                    label="Bairro"
-                                    value={this.state.district}
-                                    name="district"
-                                    type="text"
-                                    id="district" />
-
-                                <TextInput
-                                    onChange={this.handleInputChange}
-                                    label="Cidade"
-                                    value={this.state.city}
-                                    name="city"
-                                    type="text"
-                                    id="city" />
-
-                                <div className={styles.buttons}>
-                                    <a href="#personal">Anterior</a>
-                                    <a href="#knowUs">Proximo</a>
-                                </div>
-
-                            </section>
-
-                            <section className={styles.section} id="knowUs">
-
-                                <Select
-                                    onChange={this.handleInputChange}
-                                    label="Como você conheceu a Paz Church?"
-                                    value={this.state.knowPaz}
-                                    type="text"
-                                    name="knowPaz"
-                                    id="knowPaz"
-                                    options={[
-                                        { value: "", label: "" },
-                                        { value: "indication", label: "Indicação de um amigo" },
-                                        { value: "youtube", label: "Youtube" },
-                                        { value: "passBy", label: "Passei na frente" },
-                                        { value: "others", label: "Outros" }
-                                    ]} />
-
-                                <Select
-                                    onChange={this.handleInputChange}
-                                    label="Já participou de algum culto nosso?"
-                                    name="participate"
-                                    id="pYes1"
-                                    value={this.state.participate}
-                                    options={[
-                                        { value: "", label: "" },
-                                        { value: "yesOne", label: "Sim, uma vez" },
-                                        { value: "yesSome", label: "Sim, algumas vezes" },
-                                        { value: "no", label: "Não, será a primeira vez" }
-                                    ]}
-                                />
-
-                                <Select
-                                    onChange={this.handleInputChange}
-                                    label="Participa de um Life Group?"
-                                    name="group"
-                                    id="group"
-                                    value={this.state.group}
-                                    options={[
-                                        { value: "", label: "" },
-                                        { value: "yes", label: "Sim" },
-                                        { value: "no", label: "Não" }
-                                    ]}
-                                />
-
-                                {this.state.group != "no" &&
-                                    <TextInput
-                                        onChange={this.handleInputChange}
-                                        label="Quem é o líder?"
-                                        value={this.state.leader}
-                                        type="text"
-                                        name="leader"
-                                        id="leader" />
+                            <div className={styles.buttons}>
+                                <a onClick={() => {
+                                    this.handleSectionVisibility("personal", "enterAddress")
                                 }
+                                }>Proximo</a>
+                            </div>
+                        </section>
 
-                                <div className={styles.buttons}>
-                                    <a href="#enterAddress">Anterior</a>
-                                    <a href="#contact">Proximo</a>
-                                </div>
-                            </section>
+                        <section className={this.state.enterAddress} id="enterAddress">
+                            <TextInput
+                                onChange={this.handleGetCep}
+                                label="Cep"
+                                value={this.state.cep}
+                                name="cep"
+                                type="text"
+                                id="cep" />
 
-                            <section className={styles.section} id="contact">
+                            <TextInput
+                                onChange={this.handleInputChange}
+                                label="Endereço"
+                                value={this.state.address}
+                                name="address"
+                                type="text"
+                                id="address" />
 
-                                    <TextInput
-                                        onChange={this.handleInputChange}
-                                        label="E-mail"
-                                        value={this.state.email}
-                                        type="email"
-                                        name="email"
-                                        id="email" />
 
-                                    <TextInput
-                                        onChange={this.handleGetPhone}
-                                        label="Whatsapp"
-                                        value={this.state.tel}
-                                        type="text"
-                                        name="tel"
-                                        id="tel" />
+                            <div className={styles.horizontal}>
 
-                                <div className={styles.buttons}>
-                                    <a href="#knowUs">Anterior</a>
-                                    <button type="submit">Finalizar</button>
-                                </div>
-                            </section>
-                        </form>
-                    </div >
-                }
-                {
-                    this.state.success == true &&
-                    <section>
-                        <Thanks />
-                    </section>
-                }
+                                <TextInput
+                                    onChange={this.handleInputChange}
+                                    label="Número"
+                                    value={this.state.addressNumber}
+                                    name="addressNumber"
+                                    type="number"
+                                    id="addressNumber" />
+
+                                <TextInput
+                                    onChange={this.handleInputChange}
+                                    label="Complemento"
+                                    value={this.state.addressComp}
+                                    name="addressComp"
+                                    type="text"
+                                    id="addressComp" />
+
+                            </div>
+
+                            <TextInput
+                                onChange={this.handleInputChange}
+                                label="Bairro"
+                                value={this.state.district}
+                                name="district"
+                                type="text"
+                                id="district" />
+
+                            <TextInput
+                                onChange={this.handleInputChange}
+                                label="Cidade"
+                                value={this.state.city}
+                                name="city"
+                                type="text"
+                                id="city" />
+
+                            <div className={styles.buttons}>
+                                <a onClick={() => { this.handleSectionVisibility("enterAddress", "personal") }}>Anterior</a>
+                                <a onClick={() => { this.handleSectionVisibility("enterAddress", "knowUs") }}>Proximo</a>
+                            </div>
+
+                        </section>
+
+                        <section className={this.state.knowUs} id="knowUs">
+
+                            <Select
+                                onChange={this.handleInputChange}
+                                label="Como você conheceu a Paz Church?"
+                                value={this.state.knowPaz}
+                                type="text"
+                                name="knowPaz"
+                                id="knowPaz"
+                                options={[
+                                    { value: "", label: "" },
+                                    { value: "indication", label: "Indicação de um amigo" },
+                                    { value: "youtube", label: "Youtube" },
+                                    { value: "passBy", label: "Passei na frente" },
+                                    { value: "others", label: "Outros" }
+                                ]} />
+
+                            <Select
+                                onChange={this.handleInputChange}
+                                label="Já participou de algum culto nosso?"
+                                name="participate"
+                                id="pYes1"
+                                value={this.state.participate}
+                                options={[
+                                    { value: "", label: "" },
+                                    { value: "yesOne", label: "Sim, uma vez" },
+                                    { value: "yesSome", label: "Sim, algumas vezes" },
+                                    { value: "no", label: "Não, será a primeira vez" }
+                                ]}
+                            />
+
+                            <Select
+                                onChange={this.handleInputChange}
+                                label="Participa de um Life Group?"
+                                name="group"
+                                id="group"
+                                value={this.state.group}
+                                options={[
+                                    { value: "", label: "" },
+                                    { value: "yes", label: "Sim" },
+                                    { value: "no", label: "Não" }
+                                ]}
+                            />
+
+                            {this.state.group != "no" &&
+                                <TextInput
+                                    onChange={this.handleInputChange}
+                                    label="Quem é o líder?"
+                                    value={this.state.leader}
+                                    type="text"
+                                    name="leader"
+                                    id="leader" />
+                            }
+
+                            <div className={styles.buttons}>
+                                <a onClick={() => { this.handleSectionVisibility("knowUs", "enterAddress") }}>Anterior</a>
+                                <a onClick={() => { this.handleSectionVisibility("knowUs", "contact") }}>Proximo</a>
+                            </div>
+                        </section>
+
+                        <section className={this.state.contact} id="contact">
+
+                            <TextInput
+                                onChange={this.handleInputChange}
+                                label="E-mail"
+                                value={this.state.email}
+                                type="email"
+                                name="email"
+                                id="email" />
+
+                            <TextInput
+                                onChange={this.handleGetPhone}
+                                label="Whatsapp"
+                                value={this.state.tel}
+                                type="text"
+                                name="tel"
+                                id="tel" />
+
+                            <div className={styles.buttons}>
+                                <a onClick={ () => {this.handleSectionVisibility("contact", "knowUs")}}>Anterior</a>
+                                <button type="submit">Finalizar</button>
+                            </div>
+                        </section>
+                    </form>
+                </div >
+
+                <section className={this.state.success}>
+                    <Thanks />
+                </section>
+
             </>
         )
     }

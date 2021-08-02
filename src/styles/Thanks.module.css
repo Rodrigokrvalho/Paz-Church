@@ -11,6 +11,7 @@
 .content h3 {
     font-size: 3rem;
     margin: 10px 0;
+    text-align: center;
     color: var(--background-blue)
 }
 
@@ -42,7 +43,7 @@
 
 @keyframes upToDown {
     0% {
-    transform: translateY(-101vh);
+    transform: translateY(101vh);
     }
     100% {
     transform: translateY(0vh)
