@@ -148,19 +148,19 @@ export default class Form extends React.Component {
 
         } else if (valid) {
             this.handleSectionVisibility("contact", "success")
-            // try {
-            //     const response = await fetch('/api/send-mail', {
-            //         method: 'POST',
-            //         headers: {
-            //             Accept: 'application/json',
-            //             'Content-type': 'application/json',
-            //         },
-            //         body: JSON.stringify(this.state)
-            //     })
+            try {
+                const response = await fetch('/api/send-mail', {
+                    method: 'POST',
+                    headers: {
+                        Accept: 'application/json',
+                        'Content-type': 'application/json',
+                    },
+                    body: JSON.stringify(this.state)
+                })
 
-            // } catch (err) {
-            //     console.log(err)
-            // }
+            } catch (err) {
+                console.log(err)
+            }
         }
 
     }
